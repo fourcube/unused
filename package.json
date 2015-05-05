@@ -1,0 +1,35 @@
+{
+  "name": "unused",
+  "version": "0.0.1",
+  "description": "Check for unused ES6 module imports.",
+  "main": "index.js",
+  "preferGlobal": true,
+  "bin": {
+    "unused": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fourcube/unused.git"
+  },
+  "keywords": [
+    "imports",
+    "unused",
+    "fiximports",
+    "jsx"
+  ],
+  "author": "Chris Grieger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fourcube/unused/issues"
+  },
+  "homepage": "https://github.com/fourcube/unused#readme",
+  "dependencies": {
+    "acorn-jsx": "^1.0.0",
+    "esquery": "^0.4.0",
+    "react-tools": "^0.13.2",
+    "yargs": "^3.8.0"
+  }
+}
