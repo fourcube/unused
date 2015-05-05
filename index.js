@@ -5,7 +5,11 @@ var acorn   = require('acorn-jsx'),
     esquery = require('esquery'),
     fs      = require('fs')
     argv    = require('yargs')
-                .usage('Usage: $0 [--raw=true] <file>')
+                .usage('Usage: $0 [options] <file>')
+                .alias('r', 'raw')
+                .describe('r', 'Output raw json data')
+                .alias('v', 'vim')
+                .describe('v', 'Output vim matchers')
                 .demand(1)
                 .argv,
     inputFile = argv._[0];
@@ -72,8 +76,14 @@ parseFile(inputFile, function (err, ast) {
   }
 
   // Output JSON if raw mode is requested
-  if(argv.raw) {
+  if(argv.r) {
     console.log(unusedImports);
+    return;
+  }
+
+  // Output vim 'matchadd' code if vim mode is requested
+  if(argv.v) {
+    outputVim(unusedImports);
     return;
   }
 
@@ -84,6 +94,15 @@ parseFile(inputFile, function (err, ast) {
 
   console.log("  " + "total " + unusedImports.length);
 });
+
+function outputVim(unusedImports) {
+  var commands = [];
+  unusedImports.forEach(function (x) {
+    commands.push("call matchadd('Error', '\\%" + x.start.line + "l\\%<" + (parseInt(x.end.column, 10)+1) + "v.\\%>" + (parseInt(x.start.column, 10)+1) + "v')");
+  });
+
+  console.log(':' + commands.join(' | '));
+}
 
 function padRight(str, expectedLength) {
   var pad = str;
