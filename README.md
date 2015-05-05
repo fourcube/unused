@@ -42,3 +42,18 @@ $ unused -v true test.js
 ```vim
 :call matchadd('Error', '\%1l\%<11v.\%>8v')
 ```
+
+## Usage
+
+Install via npm:
+
+`npm install -g unused-es6`
+
+Add the following to your ~/.vimrc file:
+
+```vim
+"" Highlight unused imports
+nnoremap <leader>ji :let cmd = system('unused -v true ' . expand('%'))<CR>:exec cmd<CR>
+```
+
+Press `<leader>ji` to highlight all unused imports in your current file.
