@@ -1,6 +1,6 @@
 # unused
 
-Report unused ES6 imports in JS / JSX files.
+Report unused ES6 imports in JS / JSX files. Supports output of vim commands that highlight all unused imports.
 
 Sample output:
 
@@ -27,3 +27,10 @@ $ unused --raw=true test.js
     name: 'foo' } ]
 ```
 
+
+Vim output mode:
+
+```
+$ unused -v true test.js
+:call matchadd('Error', '\%1l\%<11v.\%>8v')
+```
