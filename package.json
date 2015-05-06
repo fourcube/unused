@@ -1,6 +1,6 @@
 {
   "name": "unused-es6",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Check for unused ES6 module imports.",
   "main": "index.js",
   "preferGlobal": true,
