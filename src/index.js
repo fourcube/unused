@@ -12,17 +12,12 @@ let argv = require('yargs')
     lib  = require('./lib'),
     inputFile = argv._[0];
 
-lib.parseFile(inputFile, function (err, ast) {
-  let declaredImports,
-      unusedImports;
+lib.parseForUnusedImports(inputFile, function (err, unusedImports) {
 
   if(err) {
     console.error(err);
     return;
   }
-
-  declaredImports = lib.getImports(ast);
-  unusedImports = declaredImports.filter(lib.hasNoUsage.bind(this, ast));
 
   // Nothing to do here, the file looks fine
   if(unusedImports.length == 0) {

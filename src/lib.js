@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 "use strict";
 
 var acorn   = require('acorn-jsx'),
@@ -46,7 +45,7 @@ function getImports(ast) {
 }
 
 function hasNoUsage(ast, x) {
-  var memberExpr = esquery.parse(":matches(MemberExpression[object.name=" + x.name + "], :matches(CallExpression, Property, ArrayExpression, MemberExpression) > Identifier[name=" + x.name + "], VariableDeclarator > Identifier.init[name=" + x.name + "])");
+  var memberExpr = esquery.parse(":matches(MemberExpression[object.name=" + x.name + "], :matches(CallExpression, Property, ArrayExpression) > Identifier[name=" + x.name + "], VariableDeclarator > Identifier.init[name=" + x.name + "], ExpressionStatement > MemberExpression > Identifier.property[name=" + x.name + "])");
   return esquery.match(ast, memberExpr).length == 0;
 }
 
@@ -82,13 +81,18 @@ function formatPosition(start, end) {
   return `${start.line}:${start.column}`;
 };
 
+function _ins(o) {
+  var util = require('util');
+  console.log(util.inspect(o, false, null));
+}
+
 function parseForUnusedImports(path, cb) {
   parseFile(path, (err, ast) => {
     let declaredImports,
         unusedImports;
     
-    // Debug output 
-    // console.log(esquery.match(ast, esquery.parse("*")));
+    // Debug output
+    //_ins(esquery.match(ast, esquery.parse("*")));
     if(err) {
       return cb(err, null);
     }
