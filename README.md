@@ -54,8 +54,10 @@ Install via npm:
 Add the following to your ~/.vimrc file:
 
 ```vim
-"" Highlight unused imports
-nnoremap <leader>ji :let cmd = system('unused -v true ' . expand('%'))<CR>:exec cmd<CR>
+"" Highlight unused imports, first saves, clears previous matches
+nnoremap <leader>ji :w<CR>:call clearmatches()<CR>:let cmd = system('unused -v true ' . expand('%'))<CR>:exec cmd<CR>
 ```
 
 Press `<leader>ji` to highlight all unused imports in your current file.
+
+![demo](/../screenshots/unused_deps.png?raw=true "highlights of unused imports")
