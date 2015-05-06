@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+"use strict";
 
 var acorn   = require('acorn-jsx'),
     jsx     = require('react-tools'),
     esquery = require('esquery'),
-    fs      = require('fs')
+    fs      = require('fs'),
     argv    = require('yargs')
                 .usage('Usage: $0 [options] <file>')
                 .alias('r', 'raw')
@@ -60,17 +61,18 @@ function hasNoUsage(ast, x) {
 }
 
 parseFile(inputFile, function (err, ast) {
-  var declaredImports;
+  let declaredImports,
+      unusedImports;
 
   if(err) {
     console.error(err);
     return;
   }
 
-  //console.log(esquery.match(ast, esquery.parse("*")));
   declaredImports = getImports(ast);
   unusedImports = declaredImports.filter(hasNoUsage.bind(this, ast));
 
+  // Nothing to do here, the file looks fine
   if(unusedImports.length == 0) {
     return;
   }
@@ -87,19 +89,32 @@ parseFile(inputFile, function (err, ast) {
     return;
   }
 
+  // Output in terminal friendly mode
   var indentLevel = findIndentLevel(unusedImports);
-  unusedImports.forEach(function (x) {
-    console.log(padRight(x.name, indentLevel) +  "(" + inputFile + " " + formatPosition(x.start, x.end) + ")");
-  });
+  for (var unusedImport of unusedImports) {
+    let name     = unusedImport.name,
+        startPos = unusedImport.start,
+        endPos   = unusedImport.end;
+
+    var output = `${padRight(name, indentLevel)}(${inputFile} ${formatPosition(startPos, endPos)})`;
+    console.log(output);
+  }
 
   console.log("  " + "total " + unusedImports.length);
 });
 
 function outputVim(unusedImports) {
   var commands = [];
-  unusedImports.forEach(function (x) {
-    commands.push("call matchadd('Error', '\\%" + x.start.line + "l\\%<" + (parseInt(x.end.column, 10)+1) + "v.\\%>" + (parseInt(x.start.column, 10)+1) + "v')");
-  });
+  for (var unusedImport of unusedImports) {
+    let name      = unusedImport.name,
+        startLine = unusedImport.start.line,
+        startPos  = parseInt(unusedImport.start.column)+1,
+        endPos    = parseInt(unusedImport.end.column)+1,
+        output;
+
+    output = `call matchadd('Error', '\\%${startLine}l\\%<${endPos}v.\\%>${startPos}v')`;
+    commands.push(output);
+  }
 
   console.log(':' + commands.join(' | '));
 }
@@ -117,5 +132,5 @@ function findIndentLevel(nodes) {
 }
 
 function formatPosition(start, end) {
-  return start.line + ":" + start.column ;
+  return `${start.line}:${start.column}`;
 };
