@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/fourcube/unused.svg)](https://travis-ci.org/fourcube/unused)
 
-Report unused ES6 imports in JS / JSX files. Supports output of vim commands that highlight all unused imports.
+Report unused ES6 imports in JS / JSX files. Supports output of vim commands that highlight all unused imports. `unused` exits with code 1 when unused imports were found.
 
 Sample output:
 
